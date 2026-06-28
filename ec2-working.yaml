@@ -1,3 +1,8 @@
+#Adding an EBS Volume
+#Revision 1
+#6/27/2026
+
+
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Amazon Elastic Compute Cloud (EC2) Template
 Parameters:
@@ -11,6 +16,12 @@ Resources:
       ImageId: !Ref LatestAmild
       KeyName: !Ref AWS::AccountId
       InstanceType: t2.micro
+      BlockDeviceMappings:
+        - DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: gp2
+            DeleteOnTermination: false
+            VolumeSize: 20
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
