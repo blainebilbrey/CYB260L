@@ -1,0 +1,7 @@
+{% set bucket_location = 'us-central1' -%}
+resources:
+- name: calab-bucket-6904
+  type: storage.v1.bucket
+  properties:
+    location: {{ bucket_location }}
+    kind: storage#bucket

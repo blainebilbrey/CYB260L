@@ -1,0 +1,9 @@
+{% set resource_name = 'calab-vpc-6904' -%} # Jinja variable declaration
+ 
+resources:
+- name: {{ resource_name }}
+  type: compute.v1.network
+  properties:
+    name: {{ resource_name }}
+    description: GCP VPC Network
+    autoCreateSubnetworks: true 
