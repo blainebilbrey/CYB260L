@@ -1,20 +1,23 @@
 #Adding an EBS Volume
-#Revision 1
-#6/27/2026
+#Revision 2
+#11/8/2026 - Fixed KeyName to use an EC2 key pair parameter; renamed LatestAmiId
 
 
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Amazon Elastic Compute Cloud (EC2) Template
 Parameters:
-  LatestAmild:
+  LatestAmiId:
     Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
     Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+  KeyName:
+    Description: Name of an existing EC2 key pair for SSH access
+    Type: "AWS::EC2::KeyPair::KeyName"
 Resources:
   Ec2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: !Ref LatestAmild
-      KeyName: !Ref AWS::AccountId
+      ImageId: !Ref LatestAmiId
+      KeyName: !Ref KeyName
       InstanceType: t2.micro
       BlockDeviceMappings:
         - DeviceName: /dev/sdm

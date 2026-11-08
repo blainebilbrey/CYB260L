@@ -1,18 +1,21 @@
 #Adding RDS to working-vpc template
-#Revision 0
-#07-24-26
+#Revision 1
+#11-08-26 - Added DB security group and subnet group; password managed by Secrets Manager
 
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
   Creates a VPC named VPC-blabil6904 in the us-west-2 region
-  spanning three Availability Zones.
+  spanning three Availability Zones, with a MySQL RDS instance
+  whose master password is generated and stored in AWS Secrets Manager.
 
 Resources:
   RdsInstance:
     Type: AWS::RDS::DBInstance
     Properties:
       VPCSecurityGroups:
-      - <SECURITY-GROUP-ID>
+        - !Ref DBSecurityGroup
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      PubliclyAccessible: false
       AllocatedStorage: '5'
       DBInstanceClass: db.t3.micro
       DBInstanceIdentifier: playground-db
@@ -20,6 +23,29 @@ Resources:
       MasterUsername: Admin
       ManageMasterUserPassword: true
       
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow MySQL access from inside the VPC only
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Name
+          Value: VPC-blabil6904-DB-SG
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnets for the RDS instance across three AZs
+      SubnetIds:
+        - !Ref PublicSubnetAZ1
+        - !Ref PublicSubnetAZ2
+        - !Ref PublicSubnetAZ3
+
   VPC:
     Type: AWS::EC2::VPC
     Properties:
