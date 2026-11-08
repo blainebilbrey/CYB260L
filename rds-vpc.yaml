@@ -18,7 +18,7 @@ Resources:
       DBInstanceIdentifier: playground-db
       Engine: MySQL
       MasterUsername: Admin
-      MasterUserPassword: CloudAcademy123!
+      ManageMasterUserPassword: true
       
   VPC:
     Type: AWS::EC2::VPC
